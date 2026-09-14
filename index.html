@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SIH26144 infrasound sensor simulator — scientific dashboard for pneumatic filter modelling and signal analysis. Team Rivendell, SIH 2026.">
+    <title>Infrasound Sensor Simulator — SIH26144</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+    <!-- ================================================================
+         HEADER
+         ================================================================ -->
+
+    <header class="site-header">
+        <div class="header-inner">
+            <div class="header-title-group">
+                <h1 class="header-title">Infrasound Sensor Simulator</h1>
+                <p class="header-subtitle">SIH 2026 &middot; PS 26144 (NTRO) &middot; Team Rivendell</p>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Mechanical Transducer Design (3D Exploded View) -->
+    <section class="transducer-section" id="transducerSection">
+      <div class="transducer-scroll-wrapper" id="transducerScrollWrapper">
+        <div class="transducer-pinned" id="transducerPinned">
+          <div class="transducer-intro">
+            <h2 class="panel-heading">Mechanical Transducer Design</h2>
+            <p class="plot-desc">Scroll to see the custom diaphragm,
+            capillary, and Custom Differential Transducer assembly come apart, part by part.</p>
+          </div>
+          <div class="transducer-canvas-container" id="transducerCanvasContainer"></div>
+          <div class="transducer-caption" id="transducerCaption">
+            <span class="transducer-caption-label" id="transducerCaptionLabel"></span>
+            <span class="transducer-caption-desc" id="transducerCaptionDesc"></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ================================================================
+         PROJECT SUMMARY / LANDING SECTION (Stage 2)
+         ================================================================ -->
+
+    <section class="landing-section" id="landingSection">
+        <div class="landing-container">
+            <div class="landing-header">
+                <div class="landing-tag-group landing-chip-row">
+                    <span class="landing-badge landing-chip">SIH 2026</span>
+                    <span class="landing-badge landing-chip">PS 26144 (NTRO)</span>
+                    <span class="landing-badge landing-badge--accent landing-chip">Team Rivendell</span>
+                </div>
+                <h2 class="landing-title">High-Sensitivity Microbarometer Infrasound Transducer</h2>
+                <p class="landing-lead">
+                    A precision instrumentation architecture engineered for continuous sub-audible acoustic wave detection (0.01 – 20 Hz).
+                    The design integrates a physical two-port differential pressure transducer with an acoustic pneumatic RC filter, isolating infrasonic signatures of interest while mechanically suppressing ambient barometric drift and wind turbulence.
+                </p>
+            </div>
+
+            <!-- Technical Feature Cards -->
+            <div class="landing-grid">
+                <div class="landing-card">
+                    <div class="landing-card-header">
+                        <div class="landing-card-icon">ΔP</div>
+                        <h3 class="landing-card-title">Two-Port Differential Pressure Principle</h3>
+                    </div>
+                    <p class="landing-card-text">
+                        Direct differential measurement across a custom differential transducer comparing active ambient pressure (Port A, <span class="mono">P<sub>A</sub></span>) to a reference backing volume (Port B, <span class="mono">P<sub>B</sub></span>).
+                    </p>
+                    <div class="landing-card-formula">
+                        <span class="mono">ΔP(t) = P<sub>A</sub>(t) − P<sub>B</sub>(t)</span>
+                    </div>
+                    <p class="landing-card-subtext">
+                        Eliminates common-mode atmospheric baseline (~101.3 kPa) directly at the physical transducer, preventing ADC saturation and maximizing dynamic range for millipascal-level infrasound.
+                    </p>
+                </div>
+
+                <div class="landing-card">
+                    <div class="landing-card-header">
+                        <div class="landing-card-icon">f<sub>c</sub></div>
+                        <h3 class="landing-card-title">Pneumatic RC High-Pass Filter</h3>
+                    </div>
+                    <p class="landing-card-text">
+                        An acoustic high-pass filter formed by a precision micro-capillary bleed tube (acoustic resistance <span class="mono">R</span>) and sealed backing chamber (acoustic compliance <span class="mono">C</span>).
+                    </p>
+                    <div class="landing-card-formula">
+                        <span class="mono">f<sub>c</sub> = 1 / (2πRC) &approx; 0.02 Hz</span>
+                    </div>
+                    <p class="landing-card-subtext">
+                        Sub-corner diurnal barometric swings passively equalize between ports, whereas infrasonic transients pass unattenuated into the differential sensing chamber.
+                    </p>
+                </div>
+
+                <div class="landing-card">
+                    <div class="landing-card-header">
+                        <div class="landing-card-icon">V&V</div>
+                        <h3 class="landing-card-title">Citable Signal & Realism Models</h3>
+                    </div>
+                    <p class="landing-card-text">
+                        Standardized atmospheric acoustic profiles grounded in geophysics literature for rigorous validation and calibration:
+                    </p>
+                    <ul class="landing-card-list">
+                        <li><strong>Explosion transient:</strong> Friedlander blast shock impulse</li>
+                        <li><strong>Weather drift:</strong> Diurnal solar thermal/pressure ramp</li>
+                        <li><strong>Periodic / Helmholtz:</strong> Acoustic resonance modes</li>
+                        <li><strong>Wind / Broadband noise:</strong> 1/f atmospheric turbulence</li>
+                    </ul>
+                    <p class="landing-card-subtext">
+                        Coupled with sensor realism injection (drift, thermal noise) and drift compensation with PSD characterization.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Specs Strip -->
+            <div class="landing-specs">
+                <div class="spec-item">
+                    <span class="spec-label">Acoustic Bandwidth</span>
+                    <span class="spec-value mono">0.01 – 20.0 Hz</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Transducer Core</span>
+                    <span class="spec-value mono">Custom Differential Transducer</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Sampling Rate</span>
+                    <span class="spec-value mono">100 S/s (Nyquist Compliant)</span>
+                </div>
+                <div class="spec-item">
+                    <span class="spec-label">Noise Floor Characterization</span>
+                    <span class="spec-value mono">&lt; 0.05 Pa RMS Baseline</span>
+                </div>
+            </div>
+
+            <!-- Call-to-Action -->
+            <div class="landing-cta-box">
+                <div class="cta-text-group">
+                    <h3 class="cta-title">Interactive Sensor Simulation & Analysis</h3>
+                    <p class="cta-desc">
+                        Explore time-domain waveforms, configure pneumatic RC parameters live, observe Bode frequency magnitude response, and inspect spectral power density.
+                    </p>
+                </div>
+                <div class="cta-actions">
+                    <button type="button" class="btn-learn-physics" id="learnPhysicsBtn">
+                        <svg class="btn-cta-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path d="M9 4.804A7.968 7.968 0 005.5 4c-1.255 0-2.443.29-3.5.804v10A7.969 7.969 0 015.5 14c1.669 0 3.218.51 4.5 1.385A7.962 7.962 0 0114.5 14c1.255 0 2.443.29 3.5.804v-10A7.968 7.968 0 0014.5 4c-1.255 0-2.443.29-3.5.804V12a1 1 0 11-2 0V4.804z"/>
+                        </svg>
+                        <span>Learn the Physics</span>
+                    </button>
+                    <button type="button" class="btn-launch-simulator" id="launchSimulatorBtn">
+                        <svg class="btn-launch-icon" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                        </svg>
+                        <span class="btn-launch-text">Launch Simulator</span>
+                        <svg class="btn-launch-arrow" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <path d="M8 3v10M3 9l5 5 5-5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- ================================================================
+         MAIN LAYOUT — sidebar + content (Stage 3: Simulator Dashboard)
+         ================================================================ -->
+
+    <div class="layout-shell simulator-hidden" id="simulatorShell">
+
+        <!-- ==================== LEFT SIDEBAR ==================== -->
+
+        <aside class="sidebar">
+
+            <!-- Controls -->
+            <section class="panel" id="controlsPanel">
+                <h2 class="panel-heading">Simulation Controls</h2>
+
+                <div class="field-group">
+                    <label class="field-label" for="eventType">Event type</label>
+                    <select id="eventType" class="field-input">
+                        <option value="explosion">Explosion transient</option>
+                        <option value="drift">Weather drift</option>
+                        <option value="periodic">Periodic / Helmholtz</option>
+                        <option value="noise">Wind / Broadband noise</option>
+                    </select>
+                </div>
+
+                <div class="field-row">
+                    <div class="field-group">
+                        <label class="field-label" for="amplitude">Amplitude (Pa)</label>
+                        <input class="field-input" id="amplitude" type="number" value="1.0" min="0.001" step="0.1">
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="duration">Duration (s)</label>
+                        <input class="field-input" id="duration" type="number" value="60" min="1" step="1">
+                    </div>
+                </div>
+
+                <div class="field-group">
+                    <label class="field-label" for="realismToggle">
+                        <input type="checkbox" id="realismToggle">
+                        Apply sensor realism (noise + drift)
+                    </label>
+                </div>
+
+                <button class="btn-generate" id="generateButton">
+                    <svg class="btn-icon" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <polygon points="3,1 13,8 3,15" fill="currentColor"/>
+                    </svg>
+                    Generate Signal
+                </button>
+            </section>
+
+
+            <!-- Pneumatic model reference values -->
+            <section class="panel" id="modelPanel">
+                <h2 class="panel-heading">Pneumatic Model</h2>
+                <div class="model-table">
+                    <div class="field-group">
+                        <label class="field-label" for="rSlider">Resistance R (log scale)</label>
+                        <input type="range" id="rSlider" class="field-input"
+                               min="11" max="13" step="0.01" value="12.158">
+                        <span class="model-val mono" id="rValue">—</span>
+                    </div>
+                    <div class="field-group">
+                        <label class="field-label" for="cSlider">Compliance C (log scale)</label>
+                        <input type="range" id="cSlider" class="field-input"
+                               min="-13" max="-11" step="0.01" value="-11.790">
+                        <span class="model-val mono" id="cValue">—</span>
+                    </div>
+                    <div class="model-row">
+                        <span class="model-key">Corner f<sub>c</sub></span>
+                        <span class="model-val mono" id="fcValue">—</span>
+                    </div>
+                    <div class="model-row">
+                        <span class="model-key">Sample rate</span>
+                        <span class="model-val mono" id="sampleRateValue">100 Hz</span>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- Signal chain diagram -->
+            <section class="panel" id="signalChainPanel">
+                <h2 class="panel-heading">Signal Chain</h2>
+                <ol class="chain-list">
+                    <li class="chain-item chain-item--active">
+                        <span class="chain-badge">SRC</span>
+                        <div class="chain-text">
+                            <span class="chain-name">Atmosphere</span>
+                            <span class="chain-desc">Port A input P<sub>A</sub>(t)</span>
+                        </div>
+                    </li>
+                    <li class="chain-arrow" aria-hidden="true">↓</li>
+                    <li class="chain-item chain-item--active">
+                        <span class="chain-badge">FLT</span>
+                        <div class="chain-text">
+                            <span class="chain-name">Pneumatic Filter</span>
+                            <span class="chain-desc">Capillary + backing volume RC</span>
+                        </div>
+                    </li>
+                    <li class="chain-arrow" aria-hidden="true">↓</li>
+                    <li class="chain-item chain-item--active">
+                        <span class="chain-badge">ΔP</span>
+                        <div class="chain-text">
+                            <span class="chain-name">Differential Pressure</span>
+                            <span class="chain-desc">P<sub>A</sub> − P<sub>B</sub></span>
+                        </div>
+                    </li>
+                    <li class="chain-arrow" aria-hidden="true">↓</li>
+                    <li class="chain-item chain-item--pending">
+                        <span class="chain-badge">SNS</span>
+                        <div class="chain-text">
+                            <span class="chain-name">Custom Transducer</span>
+                            <span class="chain-desc">Differential pressure sensing core</span>
+                        </div>
+                    </li>
+                    <li class="chain-arrow" aria-hidden="true">↓</li>
+                    <li class="chain-item chain-item--pending">
+                        <span class="chain-badge">AMP</span>
+                        <div class="chain-text">
+                            <span class="chain-name">Amplifier</span>
+                            <span class="chain-desc">Gain stage</span>
+                        </div>
+                    </li>
+                    <li class="chain-arrow" aria-hidden="true">↓</li>
+                    <li class="chain-item chain-item--pending">
+                        <span class="chain-badge">ADC</span>
+                        <div class="chain-text">
+                            <span class="chain-name">ADC</span>
+                            <span class="chain-desc">Digital output</span>
+                        </div>
+                    </li>
+                </ol>
+                <p class="chain-note">Greyed stages are hardware — not yet simulated.</p>
+            </section>
+
+        </aside>
+
+
+        <!-- ==================== MAIN CONTENT ==================== -->
+
+        <main class="content" id="simulator">
+
+            <!-- KPI row -->
+            <div class="kpi-row">
+                <div class="kpi-card">
+                    <span class="kpi-label">Corner frequency f<sub>c</sub></span>
+                    <span class="kpi-value mono" id="kpiFc">—</span>
+                    <span class="kpi-unit">Hz</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Peak Port A pressure</span>
+                    <span class="kpi-value mono" id="kpiPeakA">—</span>
+                    <span class="kpi-unit">Pa</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Peak differential ΔP</span>
+                    <span class="kpi-value mono" id="kpiPeakDiff">—</span>
+                    <span class="kpi-unit">Pa</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Number of samples</span>
+                    <span class="kpi-value mono" id="kpiSamples">—</span>
+                    <span class="kpi-unit">pts</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Noise floor (RMS)</span>
+                    <span class="kpi-value mono" id="kpiNoiseFloor">—</span>
+                    <span class="kpi-unit">Pa</span>
+                </div>
+            </div>
+
+
+            <!-- Waveform row -->
+            <div class="plot-row">
+
+                <section class="plot-panel">
+                    <header class="plot-header">
+                        <h2 class="plot-title">Port A: P<sub>A</sub>(t)</h2>
+                        <p class="plot-desc">Raw atmospheric pressure signal generated by the source model</p>
+                    </header>
+                    <canvas id="portACanvas" class="plot-canvas" aria-label="Port A pressure waveform"></canvas>
+                </section>
+
+                <section class="plot-panel">
+                    <header class="plot-header">
+                        <h2 class="plot-title">Differential: ΔP(t)</h2>
+                        <p class="plot-desc">ΔP = P<sub>A</sub> − P<sub>B</sub> after pneumatic high-pass</p>
+                    </header>
+                    <canvas id="diffCanvas" class="plot-canvas" aria-label="Differential pressure waveform"></canvas>
+                </section>
+
+            </div>
+
+
+            <!-- Bode plot -->
+            <section class="plot-panel plot-panel--full">
+                <header class="plot-header">
+                    <h2 class="plot-title">Bode Plot: Pneumatic High-Pass</h2>
+                    <p class="plot-desc">Analytical magnitude response |H(jω)| · Transfer function: H<sub>hp</sub>(jω) = jωRC / (1 + jωRC)</p>
+                </header>
+                <canvas id="bodeCanvas" class="plot-canvas plot-canvas--bode" aria-label="Bode magnitude plot"></canvas>
+            </section>
+
+
+            <!-- Realism layer — drift compensation -->
+            <section class="plot-panel plot-panel--full">
+                <header class="plot-header">
+                    <h2 class="plot-title">Drift Compensation: ΔP realism layer</h2>
+                    <p class="plot-desc">Three overlaid series: <strong style="color:#f0b429">signal&nbsp;+&nbsp;drift</strong> (slow thermal artefact), <strong style="color:#c8d8f0">+&nbsp;noise</strong> (full noisy), and <strong style="color:#6ec99a">compensated</strong> (drift removed by firmware moving-average filter). Magnitudes scaled to peak amplitude so effect is always visible.</p>
+                </header>
+                <canvas id="realismCanvas" class="plot-canvas plot-canvas--bode" aria-label="Drift-compensated realism layer waveform"></canvas>
+            </section>
+
+
+            <!-- Noise floor spectrum — PSD -->
+            <section class="plot-panel plot-panel--full">
+                <header class="plot-header">
+                    <h2 class="plot-title">Noise Floor Spectrum: PSD</h2>
+                    <p class="plot-desc">One-sided power spectral density, dB SPL (re 20 µPa²), log-binned from a single-segment FFT periodogram</p>
+                </header>
+                <canvas id="spectrumCanvas" class="plot-canvas plot-canvas--bode" aria-label="Noise floor power spectral density plot"></canvas>
+            </section>
+
+
+            <!-- Metadata / status panel -->
+            <section class="meta-panel" id="metaSection">
+                <h2 class="panel-heading">Simulation Metadata</h2>
+                <div id="metaPanel" class="meta-grid">
+                    <div class="meta-item">
+                        <span class="meta-key">State</span>
+                        <span class="meta-val" id="metaState">Not run</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-key">Event</span>
+                        <span class="meta-val mono" id="metaEvent">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-key">Amplitude</span>
+                        <span class="meta-val mono" id="metaAmplitude">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-key">Duration</span>
+                        <span class="meta-val mono" id="metaDuration">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-key">Model metadata</span>
+                        <span class="meta-val mono" id="metaModelMeta">—</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-key">Last run</span>
+                        <span class="meta-val mono" id="metaTimestamp">—</span>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+    </div><!-- /.layout-shell -->
+
+
+    <!-- ================================================================
+         LEARN THE PHYSICS SIDE PANEL (Drawer)
+         ================================================================ -->
+    <div class="physics-drawer-overlay" id="physicsDrawerOverlay" aria-hidden="true">
+        <aside class="physics-drawer" id="physicsDrawer" role="dialog" aria-modal="true" aria-labelledby="physicsDrawerTitle">
+            <div class="physics-drawer-header">
+                <div class="physics-drawer-title-group">
+                    <span class="landing-badge landing-badge--accent">Physical Principles &amp; Theory</span>
+                    <h2 class="physics-drawer-title" id="physicsDrawerTitle">Infrasound Microbarometer Physics</h2>
+                </div>
+                <button type="button" class="physics-drawer-close" id="physicsDrawerCloseBtn" aria-label="Close physics panel">&times;</button>
+            </div>
+
+            <div class="physics-drawer-body">
+                <!-- Section 1 -->
+                <div class="physics-section">
+                    <div class="physics-section-badge">01</div>
+                    <h3 class="physics-section-title">Two-Port Differential Pressure Principle</h3>
+                    <p>
+                        Ambient atmospheric pressure at sea level is approximately <strong>101,325 Pa</strong>, with slow diurnal tidal oscillations and weather fronts creating ambient swings of &plusmn;500 to &plusmn;2,000 Pa. In contrast, infrasound signatures of interest (from explosions, volcanic eruptions, bolides, or severe weather) typically exhibit minute amplitudes from <strong>0.001 Pa to 10 Pa</strong>.
+                    </p>
+                    <p>
+                        Attempting to detect these millipascal perturbations using dual independent absolute pressure sensors and computing the difference digitally produces severe quantization error, sensor mismatch drift, and ADC dynamic range saturation.
+                    </p>
+                    <div class="physics-highlight-box">
+                        <div class="physics-formula mono">&Delta;P(t) = P<sub>A</sub>(t) &minus; P<sub>B</sub>(t)</div>
+                        <p class="physics-caption">
+                            A custom differential transducer core mechanically compares Port A directly against Port B, canceling out ~101.3 kPa of common-mode baseline pressure at the physical sensor level before amplification.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section 2 -->
+                <div class="physics-section">
+                    <div class="physics-section-badge">02</div>
+                    <h3 class="physics-section-title">Pneumatic RC High-Pass Filter</h3>
+                    <p>
+                        Port A is coupled directly to the ambient atmosphere through a sintered porous filter cap. Port B is connected to a sealed reference chamber (backing volume) via a precision acoustic capillary bleed tube.
+                    </p>
+                    <ul class="physics-param-list">
+                        <li><strong>Acoustic Resistance (<span class="mono">R</span>):</strong> Viscous drag of air molecules inside the narrow capillary bleed tube, calculated using Poiseuille's law (<span class="mono">Pa&middot;s/m&sup3;</span>).</li>
+                        <li><strong>Acoustic Compliance (<span class="mono">C</span>):</strong> Compressibility of air sealed in the rigid backing chamber (<span class="mono">C = V / (&rho;₀ &middot; c₀&sup2;)</span> in <span class="mono">m&sup3;/Pa</span>).</li>
+                    </ul>
+                    <div class="physics-highlight-box">
+                        <div class="physics-formula mono">f<sub>c</sub> = 1 / (2&pi;RC) &approx; 0.02 Hz</div>
+                        <div class="physics-formula mono">H<sub>hp</sub>(j&omega;) = j&omega;RC / (1 + j&omega;RC)</div>
+                        <p class="physics-caption">
+                            Slow barometric drift (&lt; 0.02 Hz) equilibrates passively across the capillary tube, keeping <span class="mono">&Delta;P &approx; 0</span>. Fast infrasonic transients (0.05 to 20 Hz) cannot bleed through the capillary in time, creating a measurable pressure differential across the diaphragm.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section 3 -->
+                <div class="physics-section">
+                    <div class="physics-section-badge">03</div>
+                    <h3 class="physics-section-title">Citable Atmospheric Signal Models</h3>
+                    <p>
+                        The simulator incorporates four reference wave models cited across atmospheric acoustics and geophysics literature:
+                    </p>
+
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">1. Explosion Transient</span>
+                            <span class="physics-citation mono">Friedlander (1946)</span>
+                        </div>
+                        <p>
+                            Blast shock wave propagation described by the classical modified Friedlander equation:
+                            <span class="mono">P(t) = P<sub>peak</sub> &middot; (1 &minus; t/t<sub>+</sub>) &middot; exp(&minus;b &middot; t/t<sub>+</sub>)</span>.
+                            Models high-energy abrupt positive overpressure followed by a prolonged sub-ambient rarefaction phase.
+                        </p>
+                    </div>
+
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">2. Weather Drift Band</span>
+                            <span class="physics-citation mono">Bedard &amp; Georges (2000)</span>
+                        </div>
+                        <p>
+                            Characterizes large-scale atmospheric gravity waves, mesoscale weather systems, and diurnal temperature ramps (&lt; 0.005 Hz) that challenge sensor baseline stability, validating the rejection ratio of the pneumatic high-pass filter.
+                        </p>
+                    </div>
+
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">3. Periodic / Acoustic Cavity</span>
+                            <span class="physics-citation mono">Goto &amp; Johnson (2011)</span>
+                        </div>
+                        <p>
+                            Models monochromatic infrasound and harmonic resonance modes generated by open volcanic conduits, acoustic organ-pipe standing waves, and resonant cavity oscillations (<span class="mono">0.1 &ndash; 5 Hz</span>).
+                        </p>
+                    </div>
+
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">4. Broadband Wind Noise</span>
+                            <span class="physics-citation mono">von K&aacute;rm&aacute;n (1948)</span>
+                        </div>
+                        <p>
+                            Simulates atmospheric boundary layer turbulence obeying the Kolmogorov / von K&aacute;rm&aacute;n power law spectrum with <span class="mono">f<sup>&minus;5/3</sup></span> roll-off, injecting representative realistic wind noise across the passband.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Section 4 -->
+                <div class="physics-section">
+                    <div class="physics-section-badge">04</div>
+                    <h3 class="physics-section-title">Reading the Graphs</h3>
+                    <p>
+                        A practical guide to interpreting each live dashboard visualization, explaining the physical phenomenon it captures and why it matters to instrument evaluation:
+                    </p>
+
+                    <!-- Plot 1: Port A -->
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">1. Port A: P<sub>A</sub>(t)</span>
+                            <span class="physics-citation mono">Raw Atmospheric Input</span>
+                        </div>
+                        <p>
+                            This plot displays the raw, unfiltered atmospheric pressure wave exactly as it arrives at the sensor's atmosphere-facing port, before any physical filtering occurs. It serves as the "ground truth" acoustic input driving the entire simulation, generated from one of four citable physical models based on the selected event type. Observing Port A allows you to see the true environmental disturbance in the air prior to entering the transducer. It provides the reference baseline against which all downstream filtering and sensing stages are compared.
+                        </p>
+                    </div>
+
+                    <!-- Plot 2: Differential -->
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">2. Differential: &Delta;P(t)</span>
+                            <span class="physics-citation mono">Pneumatic Sensor Output</span>
+                        </div>
+                        <p>
+                            This curve shows the actual sensor output&mdash;what you would measure on a physical instrument&mdash;after the pneumatic high-pass filter (capillary bleed tube and backing volume) removes slow pressure changes. The critical behavior to observe is frequency selectivity: for a rapid event like an explosion, the waveform matches Port A almost identically because fast infrasonic content passes straight through. Conversely, for a slow event like weather drift, the trace collapses toward flat zero because the gradual pressure change bleeds passively through the capillary. This plot provides direct visual proof of the two-port differential sensing principle successfully rejecting ambient barometric drift.
+                        </p>
+                    </div>
+
+                    <!-- Plot 3: Bode Plot -->
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">3. Bode Plot: Pneumatic High-Pass</span>
+                            <span class="physics-citation mono">Theoretical Transfer Function</span>
+                        </div>
+                        <p>
+                            This graph illustrates the theoretical frequency response of the pneumatic filter itself, <span class="mono">|H<sub>hp</sub>(j&omega;)|</span>, derived from the transfer function <span class="mono">H<sub>hp</sub>(j&omega;) = j&omega;RC / (1 + j&omega;RC)</span>. It represents the fixed physical behavior of the capillary resistance and backing volume, completely independent of whatever transient signal is currently generated. Crucially, this curve will not change when you switch event types or regenerate a signal, as it reflects the filter's intrinsic hardware characteristic rather than a live waveform. It updates exclusively when you adjust the physical acoustic resistance (<span class="mono">R</span>) or compliance (<span class="mono">C</span>) sliders, shifting the cutoff frequency <span class="mono">f<sub>c</sub></span>.
+                        </p>
+                    </div>
+
+                    <!-- Plot 4: Drift Compensation -->
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">4. Drift Compensation: Realism Layer</span>
+                            <span class="physics-citation mono">Imperfections &amp; DSP Firmware</span>
+                        </div>
+                        <p>
+                            This panel simulates real-world hardware imperfections by injecting electrical sensor noise alongside slow thermal pressure drift caused by temperature variations inside the sealed backing volume. It overlays three distinct traces to tell a before-and-after story: the clean theoretical signal, what a real imperfect sensor would actually output, and how closely a firmware-style digital filtering algorithm restores the true waveform. By demonstrating that slow baseline wander can be identified and stripped in software without distorting the underlying infrasound, this plot validates the project's "smart temperature compensation" engineering novelty. It proves that the sensor maintains high fidelity even during uncontrolled environmental temperature swings.
+                        </p>
+                    </div>
+
+                    <!-- Plot 5: Noise Floor Spectrum -->
+                    <div class="physics-model-card">
+                        <div class="physics-model-header">
+                            <span class="physics-model-name">5. Noise Floor Spectrum: PSD</span>
+                            <span class="physics-citation mono">Power Spectral Density</span>
+                        </div>
+                        <p>
+                            This power spectral density (PSD) plot measures how much residual noise energy exists at each frequency across the detection band, expressed in dB SPL. This represents the standard metrology protocol used in real infrasound instrumentation literature&mdash;including the Marcillo, Johnson &amp; Hart (2012) reference paper&mdash;to quantify sensor limits. It provides the quantitative noise floor characterization (measured in mPa) that technical judges expect to evaluate when determining instrument sensitivity. A low, uniform noise floor across 0.01 to 20 Hz confirms that faint sub-audible signals will not be buried in electronic or acoustic self-noise.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script type="module" src="./js/main.js"></script>
+
+</body>
+</html>
